@@ -1,0 +1,66 @@
+bisa bantu saya membuat web sederhana terkait backup dompet kripto yang saya miliki untuk membantu saya mencatat jaringan yang saya miliki ?
+
+Kira2 Tabelnya akan seperti ini
+
+Tabel_Dompet
+
+id_alamat_dompet (contoh : 0x312Bb60Dd2734EBfB200931Bdebc772Fc49b6849)
+nama_dompet (Contoh : Tabungan)
+frasa_pemulihan (terdiri dari 12 kata berbeda, jadi ada 12 kata yang mempunyai urutan yang tidak boleh diubah, jadi ada 12 Input text masing2 memiliki nomor dari 1 -12 Untuk frasa pemulihan yang akan di gabung menjadi 1 kalimat dengan pemisah spasi yang akan masuk ke database)
+QR_Code_pemulihan (upload gambar QR yang sudah ada dari screenshoot)
+kata_sandi_dompet (Menyimpan sandi Dompet)
+kode_referal (Kode referal yang akan menghubungkan dengan jaringan dan kedalaman)
+
+
+Jaringan_dari (Dompet ini terhubung dari referalnya siapa akan muncul kode referal kode_referal)
+
+
+Tabel Xera_Stacking
+Mencatat jumlah koin xera yang dibeli yang ada pada dompet (id_Alamat_dompet) juga Jumlah Investasi dari Dompet. kira2 isi tabelnya :
+
+id
+Xera_Koin (berisi Jumlah koin yang di beli)
+Stacking_duration (ada pilihan 30 hari, 90 hari, 120 hari, 180 hari, 360 hari)
+Stacking_Xera (Jumlah koin yang di stacking)
+Jumlah_invest_Rp (Dana yang di investasikan dalam Rupiah)
+
+Tabel Air_drop
+Mencatat Bonus harian dari setiap Dompet
+Jadi pad form input kita memilih dompet lalu memasukan nilai Bonus yang masuk setiap hari yang nantinya di catat ke database dan di akumulasi, mini akan muncul juga di dashboard
+
+Tujuannya di dashboar saya bisa melihat tampilan Tree Jaringan yang saya miliki, berapa aset yang saya sudah beli, Berapa Jumlah Airdrop yang saya miliki, serta dengan mengginakan jaringan internet akan Update Nilai Dolar pada dashboard, saat di klik akan muncul detail dari dompet tersebut,, jadi hanya 1 tabel ini yang akan dipakai,, data base awal adalah dompet tanpa konek dengan link referal orang lain,, dari sini akan berkembang ke bawah
+
+Dengan menggunakan php dan mysql (xampp)
+
+Buatkan juga Form Login dengan user (tresnakj) pass enkripsi bycrypt (@Aptx4869)
+
+
+Kamu SUdah membuatkan :
+
+/crypto_wallet_backup/
+├── config/
+│   └── database.php
+├── assets/
+│   ├── css/
+│   │   └── style.css
+│   └── uploads/
+│       └── qr_codes/
+├── includes/
+│   ├── header.php
+│   └── footer.php
+├── index.php
+├── login.php
+├── logout.php
+├── dashboard.php
+├── dompet/
+│   ├── index.php (list dompet)
+│   ├── tambah.php
+│   ├── detail.php
+│   └── edit.php
+├── xera_stacking/
+│   ├── index.php
+│   └── tambah.php
+├── airdrop/
+│   ├── index.php
+│   └── tambah.php
+└── database.sql
