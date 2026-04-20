@@ -1,0 +1,51 @@
+# Enable PHP
+
+AddHandler application/x-httpd-php .php
+
+
+
+# Allow access to PHP files
+
+<FilesMatch "\.(php)$">
+
+    Order allow,deny
+
+    Allow from all
+
+    Require all granted
+
+</FilesMatch>
+
+
+
+# Disable directory browsing
+
+Options -Indexes
+
+
+
+# Enable rewrite engine
+
+RewriteEngine On
+
+
+
+# Handle CORS preflight
+
+RewriteCond %{REQUEST_METHOD} OPTIONS
+
+RewriteRule ^(.*)$ $1 [R=200,L]
+
+
+
+# Allow access to api_proxy.php
+
+<Files "api_proxy.php">
+
+    Order allow,deny
+
+    Allow from all
+
+    Require all granted
+
+</Files>
