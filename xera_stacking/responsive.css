@@ -1,0 +1,158 @@
+/* Responsive fixes for xera_stacking - table overflow in .card */
+
+/* Tablet and desktop fixes */
+.card {
+  max-width: 100%;
+}
+
+.table-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-top: 15px;
+  scrollbar-width: thin;
+  scrollbar-color: #95a5a6 #f1f1f1;
+}
+
+.table-container::-webkit-scrollbar {
+  height: 12px;
+}
+
+.table-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 6px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background: #95a5a6;
+  border-radius: 6px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+  background: #7f8c8d;
+}
+
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-top: 15px;
+  scrollbar-width: thin;
+  scrollbar-color: #95a5a6 transparent;
+}
+
+.table-responsive::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+  background: #95a5a6;
+  border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+  background: #7f8c8d;
+}
+
+td small {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+}
+
+.table-container table {
+  min-width: 1000px;
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  .filter-box {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .filter-box select {
+    max-width: none;
+  }
+  table {
+    font-size: 12px;
+    border: 0;
+  }
+  thead {
+    border: none;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+  tr {
+    border-bottom: 3px solid #ddd;
+    display: block;
+    margin-bottom: 15px;
+    padding: 12px;
+    background: #f9f9f9;
+    border-radius: 8px;
+  }
+  td {
+    border-bottom: 1px dotted #ccc;
+    display: block;
+    font-size: 13px;
+    text-align: right;
+    padding: 8px 12px 8px 50%;
+    position: relative;
+  }
+  td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 12px;
+    width: 40%;
+    font-weight: 600;
+    color: #34495e;
+    padding-right: 10px;
+    text-align: left;
+    white-space: nowrap;
+  }
+  .btn {
+    padding: 8px 16px;
+    font-size: 13px;
+    width: 100%;
+    margin-top: 5px;
+  }
+  .duration-badge {
+    padding: 4px 10px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 10px;
+  }
+
+  .table-container {
+    margin-top: 10px;
+  }
+  tr {
+    padding: 10px;
+    margin-bottom: 12px;
+  }
+  td {
+    padding: 6px 12px 6px 45%;
+    font-size: 12px;
+  }
+  .stats-grid .stat-card {
+    padding: 15px;
+  }
+  .stats-grid .stat-card .value {
+    font-size: 20px;
+  }
+}
