@@ -664,6 +664,8 @@ ob_start();
 
             <a href="/luxeradompet/airdrop/index.php" class="<?= strpos($_SERVER['PHP_SELF'], '/airdrop/') !== false ? 'active' : '' ?>">Air Drop</a>
 
+            <a href="/luxeradompet/penarikan/index.php" class="<?= strpos($_SERVER['PHP_SELF'], '/penarikan/') !== false ? 'active' : '' ?>">Penarikan</a>
+
             <a href="/luxeradompet/user/index.php" class="<?= strpos($_SERVER['PHP_SELF'], '/user/') !== false ? 'active' : '' ?>">User</a>
 
             <a href="/luxeradompet/logout.php" class="logout">Logout (<?= $_SESSION['username'] ?? 'Guest' ?>)</a>

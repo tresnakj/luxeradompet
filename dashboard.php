@@ -130,7 +130,9 @@ $dompet_utama = $stmt->fetchAll();
 
 // Hitung total aset
 $total_investasi = $pdo->query("SELECT SUM(jumlah_invest_rp) as total FROM xera_stacking")->fetch()['total'] ?? 0;
-$total_airdrop = $pdo->query("SELECT SUM(jumlah_bonus) as total FROM air_drop")->fetch()['total'] ?? 0;
+$total_airdrop_raw = $pdo->query("SELECT COALESCE(SUM(jumlah_bonus),0) as total FROM air_drop")->fetch()['total'] ?? 0;
+$total_withdrawn   = $pdo->query("SELECT COALESCE(SUM(jumlah_penarikan),0) as total FROM withdraw WHERE status='completed'")->fetch()['total'] ?? 0;
+$total_airdrop     = $total_airdrop_raw - $total_withdrawn; // saldo bersih airdrop
 
 // Jumlah Dompet yang sudah stacking (distinct wallets dari tabel xera_stacking)
 $stacking_dompet_count = $pdo->query("SELECT COUNT(DISTINCT id_alamat_dompet) as total FROM xera_stacking WHERE stacking_xera > 0")->fetchColumn() ?? 0;
@@ -296,11 +298,15 @@ function generateColor($str) {
         </div>
     </div>
 
-    <!-- CARD 2: Air Drop Gabungan (Total + Wallet Terpilih) -->
+    <!-- CARD 2: Air Drop Gabungan (Saldo Bersih + Wallet Terpilih) -->
     <div class="stat-card" style="padding: 0; overflow: hidden;">
-        <!-- Bagian 1: Total Air Drop Dompet Pribadi -->
+        <!-- Bagian 1: Saldo Bersih Airdrop (Total - Penarikan Completed) -->
         <div onclick="location.href='airdrop/index.php'" style="cursor: pointer; padding: 20px; border-bottom: 1px solid #eee;">
-            <h3>Total Air Drop<br>Dompet Pribadi</h3>
+            <h3>Saldo Airdrop Bersih<br>
+                <span style="font-size: 11px; font-weight: normal; color: #95a5a6;">
+                    Total: <?= formatKoin($total_airdrop_raw) ?> &minus; Tarik: <?= formatKoin($total_withdrawn) ?>
+                </span>
+            </h3>
             <div class="stat-value"><?= formatKoin($total_airdrop) ?> XERA</div>
             <div class="stat-rupiah" id="airdrop-rp-value">
                 <span class="price-loading"></span>
@@ -313,8 +319,19 @@ function generateColor($str) {
                 Live Update
             </div>
         </div>
-        
-        <!-- Bagian 2: Air Drop Wallet Terpilih -->
+
+        <!-- Bagian 2: Link ke Penarikan + Air Drop Wallet Terpilih -->
+        <div style="padding: 12px 20px; background: #fff8f0; border-bottom: 1px solid #eee;">
+            <a href="penarikan/index.php"
+               style="display: block; text-align: center; padding: 8px 12px;
+                      background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+                      color: white; border-radius: 6px; text-decoration: none;
+                      font-size: 13px; font-weight: 600;">
+                💸 Kelola Penarikan
+            </a>
+        </div>
+
+        <!-- Bagian 3: Air Drop Wallet Terpilih -->
         <div id="card-airdrop-selected" style="cursor: pointer; padding: 20px; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
             <h3 style="font-size: 14px; color: #667eea;">🎯 Wallet Terpilih</h3>
             <div class="stat-value" id="selected-airdrop-xera" style="font-size: 18px;">0 XERA</div>
@@ -608,7 +625,9 @@ function generateColor($str) {
     window.currentTotalKoin = <?= $total_stacking_xera ?>;
     window.currentTotalInvestasi = <?= $total_investasi ?>;
     window.currentDompetCount = <?= $stacking_dompet_count ?>;
-    window.totalAirdrop = <?= $total_airdrop ?>;
+    window.totalAirdrop    = <?= $total_airdrop ?>;       // saldo bersih (total - penarikan completed)
+    window.totalAirdropRaw = <?= $total_airdrop_raw ?>;   // total airdrop sebelum dikurangi penarikan
+    window.totalWithdrawn  = <?= $total_withdrawn ?>;     // total penarikan completed
     window.defaultGroup = '<?= htmlspecialchars($default_group) ?>';
 </script>
 
