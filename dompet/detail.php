@@ -87,9 +87,10 @@ cekLogin();
 
 require_once '../config/database.php';
 
-$stmt = $pdo->prepare("SELECT d.*, 
-    (SELECT SUM(jumlah_bonus) FROM air_drop WHERE id_alamat_dompet = d.id_alamat_dompet) as total_airdrop,
-    (SELECT SUM(jumlah_invest_rp) FROM xera_stacking WHERE id_alamat_dompet = d.id_alamat_dompet) as total_investasi
+$stmt = $pdo->prepare("SELECT d.*,
+    (SELECT COALESCE(SUM(jumlah_bonus), 0) FROM air_drop WHERE id_alamat_dompet = d.id_alamat_dompet) as total_airdrop_gross,
+    (SELECT COALESCE(SUM(jumlah_penarikan), 0) FROM withdraw WHERE id_alamat_dompet = d.id_alamat_dompet AND status = 'completed') as total_withdrawn,
+    (SELECT COALESCE(SUM(jumlah_invest_rp), 0) FROM xera_stacking WHERE id_alamat_dompet = d.id_alamat_dompet) as total_investasi
     FROM dompet d WHERE d.id = ?");
 $stmt->execute([$id]);
 $dompet = $stmt->fetch();
@@ -98,6 +99,9 @@ if (!$dompet) {
     header("Location: index.php");
     exit;
 }
+
+// Hitung saldo airdrop bersih (total bonus - total penarikan completed)
+$dompet['total_airdrop'] = ($dompet['total_airdrop_gross'] ?? 0) - ($dompet['total_withdrawn'] ?? 0);
 
 $is_rekan = ($dompet['Jenis_Dompet'] === 'Rekan');
 
@@ -271,7 +275,9 @@ setTimeout(() => {
     </div>
     <div class="stat-card info">
         <div class="stat-value"><?= formatKoin($dompet['total_airdrop'] ?? 0) ?></div>
-        <div class="stat-label">Total Air Drop (XERA)</div>
+        <div class="stat-label">Saldo Airdrop Bersih (XERA)
+            <br><small style="font-size:10px; opacity:0.8;">Bonus &minus; Penarikan</small>
+        </div>
     </div>
 </div>
 

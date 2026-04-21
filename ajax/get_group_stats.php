@@ -160,7 +160,7 @@ try {
 
 
 
-    // 4. HITUNG TOTAL AIRDROP untuk wallet yang dipilih (sama seperti tambah.php)
+    // 4. HITUNG TOTAL AIRDROP untuk wallet yang dipilih (saldo bersih = bonus - penarikan completed)
 
     $total_airdrop_selected = 0;
 
@@ -170,7 +170,15 @@ try {
 
         $stmt_airdrop->execute([$wallet_address]);
 
-        $total_airdrop_selected = (float) $stmt_airdrop->fetchColumn();
+        $total_airdrop_gross = (float) $stmt_airdrop->fetchColumn();
+
+        $stmt_withdraw = $pdo->prepare("SELECT COALESCE(SUM(jumlah_penarikan), 0) as total_withdrawn FROM withdraw WHERE id_alamat_dompet = ? AND status = 'completed'");
+
+        $stmt_withdraw->execute([$wallet_address]);
+
+        $total_withdrawn_selected = (float) $stmt_withdraw->fetchColumn();
+
+        $total_airdrop_selected = $total_airdrop_gross - $total_withdrawn_selected;
 
     }
 

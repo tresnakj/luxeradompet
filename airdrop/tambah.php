@@ -36,7 +36,14 @@ if (!empty($selected_wallet_id)) {
     $stmt = $pdo->prepare("SELECT COALESCE(SUM(jumlah_bonus), 0) as total FROM air_drop WHERE id_alamat_dompet = ?");
     $stmt->execute([$selected_wallet_id]);
     $result = $stmt->fetch();
-    $total_airdrop = $result['total'] ?? 0;
+    $total_airdrop_gross = $result['total'] ?? 0;
+
+    $stmt_wd = $pdo->prepare("SELECT COALESCE(SUM(jumlah_penarikan), 0) as total FROM withdraw WHERE id_alamat_dompet = ? AND status = 'completed'");
+    $stmt_wd->execute([$selected_wallet_id]);
+    $result_wd = $stmt_wd->fetch();
+    $total_withdrawn_wallet = $result_wd['total'] ?? 0;
+
+    $total_airdrop = $total_airdrop_gross - $total_withdrawn_wallet;
 }
 ?>
 
@@ -173,7 +180,7 @@ if (!empty($selected_wallet_id)) {
 
     <!-- RIGHT: Total Airdrop Card -->
     <div class="total-airdrop-card <?= empty($selected_wallet_id) ? 'empty' : '' ?>" id="totalAirdropCard">
-        <div class="card-label">💰 Total Airdrop</div>
+        <div class="card-label">💰 Saldo Airdrop Bersih</div>
         <div class="card-value">
             <span id="totalAirdropValue">0,00</span>
             <span class="card-unit">XERA</span>
@@ -190,10 +197,16 @@ if (!empty($selected_wallet_id)) {
             <label>Pilih Dompet</label>
             <select name="id_alamat_dompet" id="walletSelect" required style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px;">
                 <option value="" data-total="0">-- Pilih Dompet --</option>
-                <?php foreach($dompet_list as $d): 
+                <?php foreach($dompet_list as $d):
                     $stmt_total = $pdo->prepare("SELECT COALESCE(SUM(jumlah_bonus), 0) as total FROM air_drop WHERE id_alamat_dompet = ?");
                     $stmt_total->execute([$d['id_alamat_dompet']]);
-                    $wallet_total = $stmt_total->fetch()['total'] ?? 0;
+                    $wallet_total_gross = $stmt_total->fetch()['total'] ?? 0;
+
+                    $stmt_wd2 = $pdo->prepare("SELECT COALESCE(SUM(jumlah_penarikan), 0) as total FROM withdraw WHERE id_alamat_dompet = ? AND status = 'completed'");
+                    $stmt_wd2->execute([$d['id_alamat_dompet']]);
+                    $wallet_withdrawn = $stmt_wd2->fetch()['total'] ?? 0;
+
+                    $wallet_total = $wallet_total_gross - $wallet_withdrawn;
                 ?>
                 <option value="<?= $d['id_alamat_dompet'] ?>" 
                         data-total="<?= $wallet_total ?>"

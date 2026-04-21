@@ -333,7 +333,9 @@ function generateColor($str) {
 
         <!-- Bagian 3: Air Drop Wallet Terpilih -->
         <div id="card-airdrop-selected" style="cursor: pointer; padding: 20px; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
-            <h3 style="font-size: 14px; color: #667eea;">🎯 Wallet Terpilih</h3>
+            <h3 style="font-size: 14px; color: #667eea;">🎯 Saldo Airdrop Wallet Terpilih
+                <span style="font-size: 10px; font-weight: normal; color: #95a5a6; display: block; margin-top: 2px;">Bonus &minus; Penarikan</span>
+            </h3>
             <div class="stat-value" id="selected-airdrop-xera" style="font-size: 18px;">0 XERA</div>
             <div class="stat-rupiah" id="selected-airdrop-rp" style="font-size: 14px;">Rp 0</div>
             <div class="stat-usd" id="selected-airdrop-usd" style="font-size: 12px;">$0.00 USDT</div>

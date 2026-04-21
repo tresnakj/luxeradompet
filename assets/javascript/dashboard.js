@@ -1154,4 +1154,64 @@ async function updatePrices() {
 
 
 
-      // Simpan ke vari
+      // Simpan ke variabel global untuk airdrop wallet terpilih
+      window.selectedWalletAirdrop = data.total_airdrop || 0;
+      window.selectedWalletName = namaGrup || "";
+      window.selectedWalletAddress = alamatGrup || "";
+
+      // Update tampilan airdrop wallet terpilih di dashboard
+      const selectedAirdropXera = document.getElementById("selected-airdrop-xera");
+      const selectedAirdropWallet = document.getElementById("selected-airdrop-wallet");
+      const cardAirdropSelected = document.getElementById("card-airdrop-selected");
+
+      if (selectedAirdropXera) {
+        selectedAirdropXera.textContent = `${formatKoin(window.selectedWalletAirdrop)} XERA`;
+      }
+
+      if (selectedAirdropWallet) {
+        selectedAirdropWallet.textContent = namaGrup ? namaGrup : "-";
+      }
+
+      // Update konversi rupiah & USD berdasarkan harga terkini
+      updateSelectedAirdropConversions();
+
+      // Update filter status
+      const filterGrupName = namaGrup || currentGroup;
+      filterStatus.innerHTML = `✅ <strong>${filterGrupName}</strong> | Jenis: <strong>${currentJenis}</strong> | ${formatKoin(data.jumlah_dompet_stacking)} wallet stacking`;
+
+    } catch (err) {
+
+      console.error("❌ fetchGroupStats error:", err);
+
+      filterStatus.textContent = "❌ Gagal memuat data";
+
+    } finally {
+
+      setLoading(false);
+
+    }
+
+  }
+
+  // Event listeners untuk filter
+  if (filterGrup) {
+    filterGrup.addEventListener("change", function () {
+      const selectedOption = this.options[this.selectedIndex];
+      currentGroup = this.value;
+      fetchGroupStats();
+    });
+  }
+
+  if (filterJenis) {
+    filterJenis.addEventListener("change", function () {
+      currentJenis = this.value;
+      fetchGroupStats();
+    });
+  }
+
+  // Initial load
+  if (filterGrup && currentGroup) {
+    fetchGroupStats();
+  }
+
+})();
